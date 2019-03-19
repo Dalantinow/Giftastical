@@ -49,6 +49,7 @@ function displayGifs() {
 };
 
 function makeButtons() {
+
     $("#buttons-view").empty();
 
     for (var i = 0; i < topics.length; i++) {
@@ -62,12 +63,13 @@ function makeButtons() {
 
 $("#add-topic").on("click", function (event) {
     event.preventDefault();
-
+    
     var topic = $("#topic-input").val().trim();
     topics.push(topic);
     makeButtons();
 });
 
+// Animate on click function, not working
 $(".gif").on("click", function () {
 
     var state = $(this).attr("data-state");

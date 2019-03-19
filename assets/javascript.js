@@ -1,6 +1,6 @@
 var topics = ["Captain America", "Iron Man", "The Incredible Hulk", "Thor"]
 
-function displayGifs(){
+function displayGifs() {
 
     $("#gifs-appear-here").empty();
 
@@ -13,45 +13,45 @@ function displayGifs(){
         method: "GET",
     })
 
-    .then(function(response){
+        .then(function (response) {
 
-        var results = response.data
+            var results = response.data
 
-        for ( var i = 0; i < 10; i++){
+            for (var i = 0; i < 10; i++) {
 
-        var topicDiv = $("<div class='topic'>")
-        
-        var rating = results[i].rating;
+                var topicDiv = $("<div class='topic'>")
 
-        var rated = $("<p>").text("Rating: " + rating);
+                var title = results[i].title;
+                var named = $("<h2>").text(title);
 
-        topicDiv.append(rated);
+                var rating = results[i].rating;
+                var rated = $("<p>").text("Rating: " + rating);
 
-        var image = $("<img>");
+                // I gave each gif these attributes, but the images won't change from still to animated
+                // Function is at the bottom
+                var image = $("<img>");
+                image.addClass("gif");
+                image.attr("src", results[i].images.fixed_height_still.url);
+                image.attr("data-state", "still")
+                image.attr("data-still", results[i].images.fixed_height_still.url);
+                image.attr("data-animate", results[i].images.fixed_height.url);
 
-        image.addClass("gif");
+                topicDiv.append(named);
+                topicDiv.append(rated);
+                topicDiv.append(image);
 
-        image.attr("src", results[i].images.fixed_height_still.url);
+                $("#gifs-appear-here").prepend(topicDiv);
 
-        image.attr("data-state", "still")
+                console.log(response);
+            }
 
-        image.attr("data-still", results[i].images.fixed_height_still.url);
-
-        image.attr("data-animate", results[i].images.fixed_height.url);
-
-        topicDiv.append(image)
-
-        $("#gifs-appear-here").prepend(topicDiv);
-
-        }
-
-    })
+        })
 };
 
 function makeButtons() {
     $("#buttons-view").empty();
 
-    for (var i = 0; i < topics.length; i++){
+    for (var i = 0; i < topics.length; i++) {
         var t = $("<button>");
         t.addClass("topic-button");
         t.attr("data-guy", topics[i]);
@@ -60,7 +60,7 @@ function makeButtons() {
     }
 };
 
-$("#add-topic").on("click", function(event){
+$("#add-topic").on("click", function (event) {
     event.preventDefault();
 
     var topic = $("#topic-input").val().trim();
@@ -68,17 +68,18 @@ $("#add-topic").on("click", function(event){
     makeButtons();
 });
 
-$(".gif").on("click", function() {
-    
+$(".gif").on("click", function () {
+
     var state = $(this).attr("data-state");
+
     if (state === "still") {
-      $(this).attr("src", $(this).attr("data-animate"));
-      $(this).attr("data-state", "animate");
+        $(this).attr("src", $(this).attr("data-animate"));
+        $(this).attr("data-state", "animate");
     } else {
-      $(this).attr("src", $(this).attr("data-still"));
-      $(this).attr("data-state", "still");
+        $(this).attr("src", $(this).attr("data-still"));
+        $(this).attr("data-state", "still");
     }
-  });
+});
 
 $(document).on("click", ".topic-button", displayGifs);
 
